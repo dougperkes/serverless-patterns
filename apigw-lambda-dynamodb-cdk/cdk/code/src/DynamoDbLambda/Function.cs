@@ -31,6 +31,7 @@ namespace DynamoDbLambda
 
             return new APIGatewayProxyResponse()
             {
+                Body = "Successfully inserted data!",
                 StatusCode = 201
             };
         }

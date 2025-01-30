@@ -16,7 +16,7 @@ namespace Cdk
         {
             var buildOption = new BundlingOptions()
             {
-                Image = Runtime.DOTNET_6.BundlingImage,
+                Image = Runtime.DOTNET_8.BundlingImage,
                 User = "root",
                 OutputType = BundlingOutput.ARCHIVED,
                 Command = new string[]{
@@ -29,9 +29,9 @@ namespace Cdk
             };
 
             // Create a source DynamoDB Table
-            // Note: RemovalPolicy.DESTROY will delete the DynamoDB table when you run cdk destroy command
-            // Enable the DynamoDB stream
-            Table sourceDynamoDBTable = new Table(this, "SourceDynamoDBTable", new TableProps
+            // Note: RemovalPolicy.DESTROY will delete the DynamoDB table when you run cdk destroy command
+            // Enable the DynamoDB stream
+            Table sourceDynamoDBTable = new Table(this, "SourceDynamoDBTable", new TableProps
             {
                 TableName = sourceTableName,
                 PartitionKey = new Attribute { Name = "Id", Type = AttributeType.STRING },
@@ -39,23 +39,23 @@ namespace Cdk
                 Stream = StreamViewType.NEW_IMAGE
             });
 
-            // Create Lambda execution role
-            Role lambdaExecutionRole = new Role(this, functionName + "-execution-role", new RoleProps
+            // Create Lambda execution role
+            Role lambdaExecutionRole = new Role(this, functionName + "-execution-role", new RoleProps
             {
                 RoleName = functionName + "-execution-role",
                 AssumedBy = new ServicePrincipal("lambda.amazonaws.com")
             });
 
-            // Add AWS Managed Policies
-            // Best practice is to provide least privilege access
-            lambdaExecutionRole.AddManagedPolicy(ManagedPolicy.FromAwsManagedPolicyName("AmazonDynamoDBFullAccess"));
+            // Add AWS Managed Policies
+            // Best practice is to provide least privilege access
+            lambdaExecutionRole.AddManagedPolicy(ManagedPolicy.FromAwsManagedPolicyName("AmazonDynamoDBFullAccess"));
             lambdaExecutionRole.AddManagedPolicy(ManagedPolicy.FromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"));
 
-            // Create a Lambda function to process the DynamoDB stream
-            Function processDynamoDBFunc = new Function(this, "ProcessDynamoDBRecordsFunction", new FunctionProps
+            // Create a Lambda function to process the DynamoDB stream
+            Function processDynamoDBFunc = new Function(this, "ProcessDynamoDBRecordsFunction", new FunctionProps
             {
                 FunctionName = functionName,
-                Runtime = Runtime.DOTNET_6,
+                Runtime = Runtime.DOTNET_8,
                 Code = Code.FromAsset("code/src/AddItemsDynamoDB", new Amazon.CDK.AWS.S3.Assets.AssetOptions()
                 {
                     Bundling = buildOption
@@ -65,8 +65,8 @@ namespace Cdk
                 Timeout = Duration.Seconds(120)
             });
 
-            // Add an event source in AWS Lambda
-            EventSourceMapping eventSourceMapping = new EventSourceMapping(this, "EventSourceMapping", new EventSourceMappingProps
+            // Add an event source in AWS Lambda
+            EventSourceMapping eventSourceMapping = new EventSourceMapping(this, "EventSourceMapping", new EventSourceMappingProps
             {
                 Target = processDynamoDBFunc,
                 BatchSize = 100,
@@ -76,9 +76,9 @@ namespace Cdk
             eventSourceMapping.Node.AddDependency(processDynamoDBFunc);
             eventSourceMapping.Node.AddDependency(sourceDynamoDBTable);
 
-            // Create a Target DynamoDB Table
-            // Note: RemovalPolicy.DESTROY will delete the DynamoDB table when you run cdk destroy command
-            Table targetDynamoDBTable = new Table(this, "TargetDynamoDBTable", new TableProps
+            // Create a Target DynamoDB Table
+            // Note: RemovalPolicy.DESTROY will delete the DynamoDB table when you run cdk destroy command
+            Table targetDynamoDBTable = new Table(this, "TargetDynamoDBTable", new TableProps
             {
                 TableName = targetTableName,
                 PartitionKey = new Attribute { Name = "Id", Type = AttributeType.STRING },

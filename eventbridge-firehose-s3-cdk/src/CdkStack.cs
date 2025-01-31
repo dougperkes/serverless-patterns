@@ -105,7 +105,7 @@ namespace EventBridgeFirehoseS3Stack
                     {
                         Enabled = true,
                         LogGroupName = "FirehoseLogs",
-                        LogStreamName = "DliveryStreamLogs"
+                        LogStreamName = "DeliveryStreamLogs"
                     },
                     ErrorOutputPrefix = "FirehoseFailures/"
                 }

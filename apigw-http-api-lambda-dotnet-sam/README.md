@@ -9,7 +9,7 @@ This project shows how to use AWS SAM for an ASP.NET Core Web API project using 
 * [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) installed and configured
 * [Git Installed](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 * [AWS Serverless Application Model](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) (AWS SAM) installed
-* [.Net 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+* [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) installed
 
 ## Deployment Instructions
 
@@ -59,9 +59,10 @@ Successfully created/updated stack - dotnet-http-api in ap-southeast-2
 You can use this endpoint to test the HTTP response
 
 ```bash
-export ApiUrl=https://hr029dslcf.execute-api.ap-southeast-2.amazonaws.com/Prod/                                                            
+export ApiUrl=https://hr029dslcf.execute-api.ap-southeast-2.amazonaws.com/Prod/
 
 curl $ApiUrl
+curl $ApiUrl/api
 ```
 
 ## Cleanup

@@ -9,8 +9,8 @@
   "region": "us-east-1",
   "configuration": "Release",
   "function-architecture": "x86_64",
-  "function-runtime": "dotnet6",
-  "function-memory-size": 256,
+  "function-runtime": "dotnet8",
+  "function-memory-size": 1024,
   "function-timeout": 30,
   "function-handler": "SecretsManagerLambda::SecretsManagerLambda.Function::FunctionHandler"
 }

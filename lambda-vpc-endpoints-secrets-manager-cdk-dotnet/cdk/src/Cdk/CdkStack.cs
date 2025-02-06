@@ -88,7 +88,7 @@ namespace Cdk
             // Lambda Function Build Commands
             var buildOption = new BundlingOptions()
             {
-                Image = Runtime.DOTNET_6.BundlingImage,
+                Image = Runtime.DOTNET_8.BundlingImage,
                 User = "root",
                 OutputType = BundlingOutput.ARCHIVED,
                 Command = new string[]{
@@ -105,9 +105,9 @@ namespace Cdk
             var lambdaFunction = new Function(this, "LambdaFunction", new FunctionProps
             {
                 FunctionName= lambdaFunctionName,
-                MemorySize = 256,
+                MemorySize = 1024,
                 Timeout = Duration.Seconds(30),
-                Runtime = Runtime.DOTNET_6,
+                Runtime = Runtime.DOTNET_8,
                 Handler = "SecretsManagerLambda::SecretsManagerLambda.Function::FunctionHandler",
                 Role = lambdaIAMRole,
                 Environment = new Dictionary<string, string>(1)

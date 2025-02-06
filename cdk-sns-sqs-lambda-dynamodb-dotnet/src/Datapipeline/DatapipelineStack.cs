@@ -46,7 +46,8 @@ namespace Datapipeline
                 {
                     Name = "datatype",
                     Type = AttributeType.STRING
-                }
+                },
+                RemovalPolicy = RemovalPolicy.DESTROY
             });
 
             DockerImageCode dockerImageCode = DockerImageCode.FromImageAsset("./src/rawlambda");
@@ -56,7 +57,7 @@ namespace Datapipeline
                 new DockerImageFunctionProps()
                 {
                     Code = dockerImageCode,
-                    Description = ".NET 6 Docker rawLambda function",
+                    Description = ".NET 8 Docker rawLambda function",
                     Environment = new Dictionary<string, string>
                     {
                         { "TABLE_NAME", CrossStackTable.TableName}

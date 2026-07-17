@@ -1,0 +1,30 @@
+{
+  "resource": "/countdown",
+  "path": "/countdown",
+  "httpMethod": "GET",
+  "headers": {
+    "Accept": "*/*",
+    "Host": "abc123.execute-api.us-east-1.amazonaws.com"
+  },
+  "queryStringParameters": {
+    "duration": "30",
+    "interval": "5"
+  },
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {
+    "resourceId": "abc123",
+    "resourcePath": "/countdown",
+    "httpMethod": "GET",
+    "requestId": "test-request-id",
+    "accountId": "123456789012",
+    "stage": "prod",
+    "identity": {
+      "sourceIp": "127.0.0.1",
+      "userAgent": "curl/8.0"
+    },
+    "apiId": "abc123"
+  },
+  "body": null,
+  "isBase64Encoded": false
+}

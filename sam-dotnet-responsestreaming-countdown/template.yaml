@@ -1,0 +1,84 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Countdown timer using Lambda Response Streaming through API Gateway.
+  Streams a countdown every N seconds via a REST API with response streaming enabled.
+
+Globals:
+  Function:
+    Timeout: 900
+    MemorySize: 256
+    Runtime: dotnet10
+    Architectures:
+      - x86_64
+
+Resources:
+  # ─────────────────────────────────────────────────────────────────────
+  # REST API with response streaming
+  # ─────────────────────────────────────────────────────────────────────
+  CountdownApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: countdown-streaming-api
+      Description: REST API with response streaming for countdown timer
+
+  CountdownResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref CountdownApi
+      ParentId: !GetAtt CountdownApi.RootResourceId
+      PathPart: countdown
+
+  CountdownMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref CountdownApi
+      ResourceId: !Ref CountdownResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        ResponseTransferMode: STREAM
+        TimeoutInMillis: 900000
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2021-11-15/functions/${CountdownFunction.Arn}/response-streaming-invocations
+
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: CountdownMethod
+    Properties:
+      RestApiId: !Ref CountdownApi
+
+  ApiStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref CountdownApi
+      DeploymentId: !Ref ApiDeployment
+      StageName: prod
+
+  # ─────────────────────────────────────────────────────────────────────
+  # Lambda Function — countdown timer with response streaming
+  # ─────────────────────────────────────────────────────────────────────
+  CountdownFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: CountdownStreaming
+      CodeUri: ./src/
+      Description: Streams a countdown timer response every N seconds
+
+  # Permission for API Gateway to invoke the function via response streaming
+  CountdownFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt CountdownFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CountdownApi}/*
+
+Outputs:
+  ApiEndpoint:
+    Description: API Gateway endpoint URL for the countdown streaming endpoint
+    Value: !Sub "https://${CountdownApi}.execute-api.${AWS::Region}.amazonaws.com/prod/countdown"
+  CountdownFunctionArn:
+    Description: Countdown streaming Lambda function ARN
+    Value: !GetAtt CountdownFunction.Arn

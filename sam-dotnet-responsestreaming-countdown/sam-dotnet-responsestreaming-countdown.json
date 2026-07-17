@@ -1,0 +1,64 @@
+{
+  "title": "Lambda Response Streaming via API Gateway — Countdown Timer (.NET)",
+  "description": "Stream a countdown timer from Lambda through API Gateway response streaming, demonstrating time-to-first-byte and long-running streamed responses.",
+  "language": ".NET",
+  "level": "200",
+  "framework": "SAM",
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "This pattern deploys a Lambda function that streams a countdown timer through an API Gateway REST API. The client receives the first line immediately, then subsequent countdown ticks arrive every N seconds.",
+      "API Gateway is configured with ResponseTransferMode: STREAM and the Lambda uses the /response-streaming-invocations URI path. The countdown can run for up to 10 minutes while streaming progress.",
+      "This is the simplest possible response streaming pattern — no external dependencies, just a timer demonstrating TTFB improvement and the .NET response streaming SDK."
+    ]
+  },
+  "gitHub": {
+    "template": {
+      "repoURL": "https://github.com/aws-samples/serverless-patterns/tree/main/sam-dotnet-responsestreaming-countdown",
+      "templateURL": "serverless-patterns/sam-dotnet-responsestreaming-countdown",
+      "projectFolder": "sam-dotnet-responsestreaming-countdown",
+      "templateFile": "template.yaml"
+    }
+  },
+  "resources": {
+    "bullets": [
+      {
+        "text": "Lambda Response Streaming Documentation",
+        "link": "https://docs.aws.amazon.com/lambda/latest/dg/response-streaming.html"
+      },
+      {
+        "text": "API Gateway Response Streaming",
+        "link": "https://docs.aws.amazon.com/apigateway/latest/developerguide/rest-api-response-streaming.html"
+      },
+      {
+        "text": "AWS Lambda .NET SDK",
+        "link": "https://github.com/aws/aws-lambda-dotnet"
+      }
+    ]
+  },
+  "deploy": {
+    "text": [
+      "sam build",
+      "sam deploy --guided"
+    ]
+  },
+  "testing": {
+    "text": [
+      "See the GitHub repo for detailed testing instructions."
+    ]
+  },
+  "cleanup": {
+    "text": [
+      "Delete the stack: <code>sam delete</code>."
+    ]
+  },
+  "authors": [
+    {
+      "name": "Doug Perkes",
+      "image": "",
+      "bio": "Senior Solutions Architect at AWS, focused on .NET and serverless.",
+      "linkedin": "dougperkes",
+      "twitter": ""
+    }
+  ]
+}
